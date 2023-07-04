@@ -1,6 +1,9 @@
 import org.apache.camel.CamelContext;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.impl.DefaultCamelContext;
+import org.apache.activemq.ActiveMQConnectionFactory;
+
+import javax.jms.*;
 
 public class WebOrderSystem {
     private static final String SOURCE_FOLDER = "src/main/inputfiles/webordersysteminput";
@@ -20,7 +23,17 @@ public class WebOrderSystem {
     public static void main(String[] args) throws Exception {
         String filename = args[1];
 
-        //TODO add activemq stuff
+        //activemq stuff
+        ConnectionFactory connectionFactory = new ActiveMQConnectionFactory("tcp://localhost:61616");
+        try {
+            Connection connection = connectionFactory.createConnection();
+            connection.start();
+            Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+            Topic topic = session.createTopic("new_order");
+            MessageProducer producer = session.createProducer(topic);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         CamelContext camelContext = new DefaultCamelContext();
         camelContext.addRoutes(new RouteBuilder() {
@@ -30,7 +43,7 @@ public class WebOrderSystem {
                     .split(body().tokenize("\n"))
                     .process(new WOSInputTransformer()) //transformWOS
                     .enrich() //enrich Message
-                    .to();  //pubsub channel
+                    .to("activemq:topic:new_oder");  //pubsub channel TODO might be incorrectly implemented
             }
         });
         camelContext.start();
