@@ -29,7 +29,7 @@ public class WebOrderSystem {
                 from("file://" + SOURCE_FOLDER + "?noop=true")
                     .split(body().tokenize("\n"))
                     .process(new WOSInputTransformer()) //transformWOS
-                    .enrich() //enrich Message
+                    .process(new ContentEnricher())//enrich Message
                     .to();  //pubsub channel
             }
         });
