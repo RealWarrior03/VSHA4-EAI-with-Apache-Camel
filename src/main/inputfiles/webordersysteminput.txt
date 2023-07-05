@@ -1,2 +1,1 @@
 FirstName, LastName, Number of ordered surfboards, Number of ordered diving suits, Customer-ID
-Alice, Test, 2, 0, 1
