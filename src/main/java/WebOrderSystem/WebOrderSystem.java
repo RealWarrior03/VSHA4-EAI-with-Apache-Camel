@@ -1,3 +1,5 @@
+package WebOrderSystem;
+
 import org.apache.camel.CamelContext;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.impl.DefaultCamelContext;
@@ -6,8 +8,8 @@ import org.apache.activemq.ActiveMQConnectionFactory;
 import javax.jms.*;
 
 public class WebOrderSystem {
-    private static final String SOURCE_FOLDER = "src/main/inputfiles/webordersysteminput";
-    private static final String DESTINATION_FOLDER = "src/main/outputfiles/webordersystemoutput";
+    private static final String SOURCE_FOLDER = "src/main/inputfiles/webordersysteminput.txt";
+    private static final String DESTINATION_FOLDER = "src/main/outputfiles/webordersystemoutput.txt";
 
 
     /*
