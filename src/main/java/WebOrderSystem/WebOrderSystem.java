@@ -8,9 +8,8 @@ import org.apache.activemq.ActiveMQConnectionFactory;
 import javax.jms.*;
 
 public class WebOrderSystem {
-    private static final String SOURCE_FOLDER = "src/main/inputfiles/webordersysteminput.txt";
-    private static final String DESTINATION_FOLDER = "src/main/outputfiles/webordersystemoutput.txt";
-
+    private static final String SOURCE_FILE = "../inputfiles/webordersysteminput.txt";
+    private static final String DESTINATION_FILE = "../outputfiles/webordersystemoutput.txt";
 
     /*
     INPUT:
@@ -23,7 +22,7 @@ public class WebOrderSystem {
      */
 
     public static void main(String[] args) throws Exception {
-        String filename = args[1];
+        String filename = args[0];
 
         //activemq stuff
         ConnectionFactory connectionFactory = new ActiveMQConnectionFactory("tcp://localhost:61616");
@@ -41,14 +40,29 @@ public class WebOrderSystem {
         camelContext.addRoutes(new RouteBuilder() {
             @Override
             public void configure() throws Exception {
-                from("file://" + SOURCE_FOLDER + "?noop=true")
+                from("file:" + SOURCE_FILE)//TODO change back to file input direct:start
+
+                    .process(exchange -> {
+                        // Hole den Inhalt der Datei
+                        String content = exchange.getIn().getBody(String.class);
+
+                        // Gib den Inhalt in der Konsole aus
+                        System.out.println("Inhalt der Datei: " + content);
+                    })
+
                     .split(body().tokenize("\n"))
                     .process(new WOSInputTransformer()) //transformWOS
                     .process(new ContentEnricher())//enrich Message
-                    .to("activemq:topic:new_oder");  //pubsub channel TODO might be incorrectly implemented
+                    //.to("activemq:topic:new_oder");  //pubsub channel TODO might be incorrectly implemented
+                    .to("file:" + DESTINATION_FILE);
             }
         });
         camelContext.start();
+
+        //camelContext.createProducerTemplate().sendBody("direct:start", "Peter, Parker, 2, 0, 1");
+
+        Thread.sleep(5000);
+
         camelContext.stop();
     }
 }

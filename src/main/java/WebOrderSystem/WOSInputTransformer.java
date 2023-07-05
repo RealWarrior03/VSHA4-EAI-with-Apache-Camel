@@ -21,7 +21,7 @@ public class WOSInputTransformer implements Processor {
         String nmbOrdDivingSuits = parts[3];
         String customerID = parts[4];
 
-        exchange.getIn().setBody(customerID + ", " + firstName + ", " + lastName + ", " + "null" + nmbOrdDivingSuits + ", "
+        exchange.getIn().setBody(customerID + ", " + firstName + ", " + lastName + ", " + "null" + ", " + nmbOrdDivingSuits + ", "
                 + nmbOrdSurfBoards + ", " + "null" + ", " + "null");
 
     }

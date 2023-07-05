@@ -17,6 +17,6 @@ public class ContentEnricher implements Processor {
         Integer val2 = Integer.parseInt(parts[5]);
         parts[3] = Integer.toString(val1 + val2);
 
-        exchange.getOut().setBody(parts);
+        exchange.getOut().setBody(String.join(", ", parts));
     }
 }
