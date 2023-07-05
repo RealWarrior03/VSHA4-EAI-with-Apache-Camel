@@ -26,9 +26,8 @@ public class BillingSystem {
             connection.start();
             //Starting Session
             Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-
-            Topic topic = session.createTopic("aggregatorInBilling");
-            MessageProducer producer = session.createProducer(topic);
+            //create Topic
+            Topic topic = session.createTopic("new_order");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -48,7 +47,7 @@ public class BillingSystem {
                         })
 
                         .process(new CustomerCreditStanding())
-                        .to("activemq:queue:aggregatorInBilling");
+                        .to("activemq:queue:aggregatorInBilling"); //TODO setup queue in resultsystem
             }
         });
         camelContext.start();
