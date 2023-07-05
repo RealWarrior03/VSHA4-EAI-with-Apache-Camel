@@ -36,6 +36,8 @@ public class WebOrderSystem {
             e.printStackTrace();
         }
 
+        Thread.sleep(10000);
+
         CamelContext camelContext = new DefaultCamelContext();
         camelContext.addRoutes(new RouteBuilder() {
             @Override
@@ -53,9 +55,9 @@ public class WebOrderSystem {
                     .split(body().tokenize("\n"))
                     .process(new WOSInputTransformer()) //transformWOS
                     .process(new ContentEnricher())//enrich Message
-                    //.to("activemq:topic:new_oder");  //pubsub channel TODO might be incorrectly implemented
-                    .transform(body().append("\n"))
-                    .to("file:" + DESTINATION_FOLDER + "?fileName=webordersystemoutput.txt&noop=true&fileExist=Append"); //only for debugging
+                    .to("activemq:topic:new_oder");  //pubsub channel TODO might be incorrectly implemented
+                    //.transform(body().append("\n"))
+                    //.to("file:" + DESTINATION_FOLDER + "?fileName=webordersystemoutput.txt&noop=true&fileExist=Append"); //only for debugging
             }
         });
         camelContext.start();

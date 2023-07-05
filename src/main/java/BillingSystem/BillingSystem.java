@@ -10,7 +10,7 @@ import javax.jms.*;
 
 public class BillingSystem {
     //TODO aggregatorInBilling erstellen
-    public static void main() throws Exception {
+    public static void main(String[] args) throws Exception {
         /*
         DefaultCamelContext ctxt = new DefaultCamelContext();
         ActiveMQComponent activeMQComponent = ActiveMQComponent.activeMQComponent();
@@ -38,11 +38,20 @@ public class BillingSystem {
             @Override
             public void configure() throws Exception {
                 from("activemq:topic:new_order")
+
+                        .process(exchange -> {
+                            // Hole den Inhalt der Datei
+                            String content = exchange.getIn().getBody(String.class);
+
+                            // Gib den Inhalt in der Konsole aus
+                            System.out.println("Inhalt der Datei: " + content);
+                        })
+
                         .process(new CustomerCreditStanding())
                         .to("activemq:queue:aggregatorInBilling");
             }
         });
         camelContext.start();
-        camelContext.stop();
+        //camelContext.stop();
     }
 }
