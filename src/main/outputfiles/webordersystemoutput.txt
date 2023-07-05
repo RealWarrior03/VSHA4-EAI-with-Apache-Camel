@@ -1,0 +1,2 @@
+1, Peter, Parker, 3, 2, 1, null, null
+2, Greta, Thunfisch, 5, 3, 2, null, null

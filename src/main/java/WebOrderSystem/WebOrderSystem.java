@@ -8,8 +8,8 @@ import org.apache.activemq.ActiveMQConnectionFactory;
 import javax.jms.*;
 
 public class WebOrderSystem {
-    private static final String SOURCE_FILE = "../inputfiles/webordersysteminput.txt";
-    private static final String DESTINATION_FILE = "../outputfiles/webordersystemoutput.txt";
+    private static final String SOURCE_FOLDER = "src/main/inputfiles";
+    private static final String DESTINATION_FOLDER = "src/main/outputfiles";
 
     /*
     INPUT:
@@ -40,7 +40,7 @@ public class WebOrderSystem {
         camelContext.addRoutes(new RouteBuilder() {
             @Override
             public void configure() throws Exception {
-                from("file:" + SOURCE_FILE)//TODO change back to file input direct:start
+                from("file:" + SOURCE_FOLDER + "?fileName=webordersysteminput.txt&noop=true")
 
                     .process(exchange -> {
                         // Hole den Inhalt der Datei
@@ -54,7 +54,8 @@ public class WebOrderSystem {
                     .process(new WOSInputTransformer()) //transformWOS
                     .process(new ContentEnricher())//enrich Message
                     //.to("activemq:topic:new_oder");  //pubsub channel TODO might be incorrectly implemented
-                    .to("file:" + DESTINATION_FILE);
+                    .transform(body().append("\n"))
+                    .to("file:" + DESTINATION_FOLDER + "?fileName=webordersystemoutput.txt&noop=true&fileExist=Append"); //only for debugging
             }
         });
         camelContext.start();
