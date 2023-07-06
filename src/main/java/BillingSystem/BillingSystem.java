@@ -19,15 +19,14 @@ public class BillingSystem {
         */
         //activemq stuff
 
-        ConnectionFactory connectionFactory = new ActiveMQConnectionFactory("tcp://localhost:61616");
+        ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory("tcp://localhost:61616");
+        connectionFactory.setTrustAllPackages(true);
         try {
-            //Getting Connection and starting it
             Connection connection = connectionFactory.createConnection();
             connection.start();
-            //Starting Session
             Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-            //create Topic
             Topic topic = session.createTopic("new_order");
+            //MessageProducer producer = session.createProducer(topic);
         } catch (Exception e) {
             e.printStackTrace();
         }

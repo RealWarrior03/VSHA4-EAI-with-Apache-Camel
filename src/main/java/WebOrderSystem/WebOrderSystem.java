@@ -25,13 +25,14 @@ public class WebOrderSystem {
         String filename = args[0];
 
         //activemq stuff
-        ConnectionFactory connectionFactory = new ActiveMQConnectionFactory("tcp://localhost:61616");
+        ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory("tcp://localhost:61616");
+        connectionFactory.setTrustAllPackages(true);
         try {
             Connection connection = connectionFactory.createConnection();
             connection.start();
             Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
             Topic topic = session.createTopic("new_order");
-            MessageProducer producer = session.createProducer(topic);
+            //MessageProducer producer = session.createProducer(topic);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -55,7 +56,7 @@ public class WebOrderSystem {
                     .split(body().tokenize("\n"))
                     .process(new WOSInputTransformer()) //transformWOS
                     .process(new ContentEnricher())//enrich Message
-                    .to("activemq:topic:new_oder");  //pubsub channel TODO might be incorrectly implemented
+                    .to("activemq:topic:new_order");  //pubsub channel TODO might be incorrectly implemented
                     //.transform(body().append("\n"))
                     //.to("file:" + DESTINATION_FOLDER + "?fileName=webordersystemoutput.txt&noop=true&fileExist=Append"); //only for debugging
             }
