@@ -9,6 +9,7 @@ import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.impl.DefaultCamelContext;
 
 import javax.jms.Connection;
+import javax.jms.Queue;
 import javax.jms.Session;
 import javax.jms.Topic;
 
@@ -20,7 +21,7 @@ public class OrderIDGenerator {
             Connection connection = connectionFactory.createConnection();
             connection.start();
             Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-            //Queue orderIDGenIn = session.
+            Queue orderIDGenIn = session.createQueue("orderIDGenIn");
             //MessageProducer producer = session.createProducer(topic);
         } catch (Exception e) {
             e.printStackTrace();
@@ -33,7 +34,7 @@ public class OrderIDGenerator {
             @Override
             public void configure() throws Exception {
                 from("activemq:queue:orderIDGenIn")
-
+                        .transform(new)
                         .to("activemq:topic:new_order");  //pubsub channel TODO might be incorrectly implemented
                 //.transform(body().append("\n"))
                 //.to("file:" + DESTINATION_FOLDER + "?fileName=webordersystemoutput.txt&noop=true&fileExist=Append"); //only for debugging
