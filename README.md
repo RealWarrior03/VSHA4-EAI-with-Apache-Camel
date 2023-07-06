@@ -2,12 +2,13 @@
 - to be written
 
 # To-Do
-- [ ] WebOrderSystem
+- [x] WebOrderSystem
   - [x] from
   - [x] process
-  - [ ] enrich
-  - [ ] to
+  - [x] enrich
+  - [x] to
 - [ ] CallCenterOrderSystem
+  - notes: basically similar to WOS; file is only read every 120s, transformer works differently, target: orderIDGenIn
   - [ ] from
   - [ ] process
   - [ ] enrich
@@ -15,6 +16,9 @@
 - [ ] BillingSystem
 - [ ] InventorySystem
 - [ ] ResultSystem
+- [ ] Database
+  - [ ] Customers
+  - [ ] Inventory
 
 # Bugs
 - nothing
