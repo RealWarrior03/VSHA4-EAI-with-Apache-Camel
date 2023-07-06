@@ -1,4 +1,4 @@
-package WebOrderSystem;
+package CallCenterOrderSystem;
 
 import ContentEnricher.*;
 import OrderMessage.OrderMessage;
@@ -9,14 +9,14 @@ import org.apache.activemq.ActiveMQConnectionFactory;
 
 import javax.jms.*;
 
-public class WebOrderSystem {
+public class CallCenterOrderSystem {
     private static final String SOURCE_FOLDER = "src/main/inputfiles";
     private static final String DESTINATION_FOLDER = "src/main/outputfiles";
 
     /*
     PARAMS:
     foldername filename
-    example: src/main/inputfiles webordersysteminput.txt
+    example: src/main/inputfiles callcenterordersysteminput.txt
 
     INPUT:
     a file containing multiple orders seperated by \n
@@ -38,7 +38,8 @@ public class WebOrderSystem {
             Connection connection = connectionFactory.createConnection();
             connection.start();
             Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-            Queue queue = session.createQueue("orderIDGenIn");
+            //Topic topic = session.createTopic("new_order");
+            //MessageProducer producer = session.createProducer(topic);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -50,23 +51,23 @@ public class WebOrderSystem {
             @Override
             public void configure() throws Exception {
                 from("file:" + foldername + "?fileName=" + filename + "&noop=true")
-                    .split(body().tokenize("\n"))
-                    .process(new WOSInputTransformer()) //transformWOS
-                    .process(new ContentEnricher())//enrich Message
+                        .split(body().tokenize("\n"))
+                        .process(new WOSInputTransformer()) //transformWOS
+                        .process(new ContentEnricher())//enrich Message
 
-                    //printing out MessageObjects
-                    .process(exchange -> {
-                        // Hole den Inhalt der Datei
-                        OrderMessage content = exchange.getIn().getBody(OrderMessage.class);
+                        //printing out MessageObjects
+                        .process(exchange -> {
+                            // Hole den Inhalt der Datei
+                            OrderMessage content = exchange.getIn().getBody(OrderMessage.class);
 
-                        // Gib den Inhalt in der Konsole aus
-                        System.out.println("Content of the OrderMessage Object");
-                        System.out.println(content.toString());
-                    })
+                            // Gib den Inhalt in der Konsole aus
+                            System.out.println("Content of the OrderMessage Object");
+                            System.out.println(content.toString());
+                        })
 
-                    .to("activemq:queue:orderIDGenIn");  //to queue channel TODO might be incorrectly implemented
-                    //.transform(body().append("\n"))
-                    //.to("file:" + DESTINATION_FOLDER + "?fileName=webordersystemoutput.txt&noop=true&fileExist=Append"); //only for debugging
+                        .to("activemq:queue:orderIDGenIn");  //to queue channel TODO might be incorrectly implemented
+                //.transform(body().append("\n"))
+                //.to("file:" + DESTINATION_FOLDER + "?fileName=webordersystemoutput.txt&noop=true&fileExist=Append"); //only for debugging
             }
         });
         camelContext.start();
@@ -78,24 +79,3 @@ public class WebOrderSystem {
         camelContext.stop();
     }
 }
-
-/*
-o CustomerID
-o FirstName
-o LastName
-o OverallItems (Number of all items in order)
-o NumberOfDivingSuits
-o NumberOfSurfboards o OrderID
-o Valid
-o validationResult
-
- .process(exchange -> {
-                        // Hole den Inhalt der Datei
-                        String content = exchange.getIn().getBody(String.class);
-
-                        // Gib den Inhalt in der Konsole aus
-                        System.out.println("Inhalt der Datei: " + content);
-                    })
-
-
- */
