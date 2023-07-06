@@ -1,7 +1,9 @@
 package WebOrderSystem;
 
 import org.apache.camel.Exchange;
+import org.apache.camel.Message;
 import org.apache.camel.Processor;
+import OrderMessage.*;
 
 public class WOSInputTransformer implements Processor {
 
@@ -21,8 +23,9 @@ public class WOSInputTransformer implements Processor {
         String nmbOrdDivingSuits = parts[3];
         String customerID = parts[4];
 
-        exchange.getIn().setBody(customerID + ", " + firstName + ", " + lastName + ", " + "null" + ", " + nmbOrdDivingSuits + ", "
-                + nmbOrdSurfBoards + ", " + "null" + ", " + "null");
+        OrderMessage message = new OrderMessage(Integer.parseInt(customerID), firstName, lastName, Integer.parseInt(nmbOrdDivingSuits), Integer.parseInt(nmbOrdSurfBoards));
+
+        exchange.getIn().setBody(message);
 
     }
 }
