@@ -8,7 +8,8 @@ public class Database {
     HashMap<String, Integer> inventoryHashMap = new HashMap<>();
 
     public Database() {
-        //inventoryHashMap.put("nmbof")
+        inventoryHashMap.put("nmbOfDivingSuits", 100);
+        inventoryHashMap.put("nmbOfSurfBoards", 100);
     }
 
     public void newCustomer(int customerID) {
