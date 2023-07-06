@@ -9,7 +9,7 @@ import org.apache.camel.impl.DefaultCamelContext;
 import javax.jms.*;
 
 public class BillingSystem {
-    //TODO aggregatorInBilling erstellen
+    //TODO aggregatorInBilling in resultsystem erstellen
     public static void main(String[] args) throws Exception {
         /*
         DefaultCamelContext ctxt = new DefaultCamelContext();
