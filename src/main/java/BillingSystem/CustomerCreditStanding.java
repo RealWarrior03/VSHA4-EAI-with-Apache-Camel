@@ -8,4 +8,5 @@ public class CustomerCreditStanding implements Processor{
     public void process(Exchange exchange) throws Exception {
         //TODO checken ob Customer genug cash hat; Problem ist: woher bekommen wir Infos über die Customer
     }
+
 }
