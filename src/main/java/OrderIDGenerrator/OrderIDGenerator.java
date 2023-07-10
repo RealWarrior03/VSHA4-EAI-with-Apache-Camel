@@ -34,7 +34,7 @@ public class OrderIDGenerator {
             @Override
             public void configure() throws Exception {
                 from("activemq:queue:orderIDGenIn")
-                        .transform(new)
+                        .process()
                         .to("activemq:topic:new_order");  //pubsub channel TODO might be incorrectly implemented
                 //.transform(body().append("\n"))
                 //.to("file:" + DESTINATION_FOLDER + "?fileName=webordersystemoutput.txt&noop=true&fileExist=Append"); //only for debugging
