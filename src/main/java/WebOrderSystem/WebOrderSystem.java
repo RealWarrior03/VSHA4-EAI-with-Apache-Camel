@@ -9,7 +9,6 @@ import org.apache.activemq.ActiveMQConnectionFactory;
 
 import javax.jms.*;
 
-
 public class WebOrderSystem {
     private static final String SOURCE_FOLDER = "src/main/inputfiles";
     private static final String DESTINATION_FOLDER = "src/main/outputfiles";

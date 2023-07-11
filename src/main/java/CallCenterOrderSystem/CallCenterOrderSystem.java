@@ -22,7 +22,7 @@ public class CallCenterOrderSystem {
     INPUT:
     a file containing multiple orders seperated by \n
     order format:
-    FirstName, LastName, Number of ordered surfboards, Number of ordered diving suits, Customer-ID
+    Customer-ID, Name, Number of ordered surfboards, Number of ordered diving suits
 
      OUTPUT:
      none
@@ -39,44 +39,45 @@ public class CallCenterOrderSystem {
             Connection connection = connectionFactory.createConnection();
             connection.start();
             Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-            //Topic topic = session.createTopic("new_order");
-            //MessageProducer producer = session.createProducer(topic);
+            Queue queue = session.createQueue("order_IDGen-In");
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         Thread.sleep(10000);
 
-        CamelContext camelContext = new DefaultCamelContext();
-        camelContext.addRoutes(new RouteBuilder() {
-            @Override
-            public void configure() throws Exception {
-                from("file:" + foldername + "?fileName=" + filename + "&noop=true")
-                        .split(body().tokenize("\n"))
-                        .process(new WOSInputTransformer()) //transformWOS
-                        .process(new ContentEnricher())//enrich Message
+        while (true) {
+            CamelContext camelContext = new DefaultCamelContext();
+            camelContext.addRoutes(new RouteBuilder() {
+                @Override
+                public void configure() throws Exception {
+                    from("file:" + foldername + "?fileName=" + filename + "&noop=true")
+                            .split(body().tokenize("\n"))
+                            .process(new CCOSInputTransformer()) //transformCCOS
+                            .process(new ContentEnricher())//enrich Message
+                            //printing out MessageObjects
+                            .process(exchange -> {
+                                // Hole den Inhalt der Datei
+                                OrderMessage content = exchange.getIn().getBody(OrderMessage.class);
 
-                        //printing out MessageObjects
-                        .process(exchange -> {
-                            // Hole den Inhalt der Datei
-                            OrderMessage content = exchange.getIn().getBody(OrderMessage.class);
+                                // Gib den Inhalt in der Konsole aus
+                                System.out.println("Content of the OrderMessage Object");
+                                System.out.println(content.toString());
+                            })
+                            .to("activemq:queue:order_IDGen-In")  //to queue channel TODO might be incorrectly implemented
+                            .transform(body().append("\n"))
+                            .to("file:" + DESTINATION_FOLDER + "?fileName=callcenterordersystemoutput.txt&noop=true&fileExist=Append"); //only for debugging
+                }
+            });
+            camelContext.start();
 
-                            // Gib den Inhalt in der Konsole aus
-                            System.out.println("Content of the OrderMessage Object");
-                            System.out.println(content.toString());
-                        })
+            //camelContext.createProducerTemplate().sendBody("direct:start", "Peter, Parker, 2, 0, 1");
 
-                        .to("activemq:queue:orderIDGenIn");  //to queue channel TODO might be incorrectly implemented
-                //.transform(body().append("\n"))
-                //.to("file:" + DESTINATION_FOLDER + "?fileName=webordersystemoutput.txt&noop=true&fileExist=Append"); //only for debugging
-            }
-        });
-        camelContext.start();
+            Thread.sleep(5000);
 
-        //camelContext.createProducerTemplate().sendBody("direct:start", "Peter, Parker, 2, 0, 1");
+            camelContext.stop();
 
-        Thread.sleep(5000);
-
-        camelContext.stop();
+            Thread.sleep(120000);
+        }
     }
 }

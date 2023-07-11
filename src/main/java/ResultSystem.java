@@ -50,6 +50,7 @@ public class ResultSystem {
                         //.to("activemq:topic:new_order");  //pubsub channel TODO might be incorrectly implemented
             }
         });
+
         camelContext.start();
     }
 
