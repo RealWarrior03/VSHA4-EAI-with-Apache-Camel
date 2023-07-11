@@ -28,7 +28,7 @@
   - [x] from
   - [x] process
   - [x] enrich
-  - [ ] to
+  - [x] to
 - [ ] BillingSystem
   - [ ] CustomerCreditStanding
 - [ ] InventorySystem
