@@ -9,6 +9,7 @@ public class OrderMessage {
     private int numberOfSurfboards;
     private boolean valid;
     private String validationResult;
+    private int orderID;
 
 
     public OrderMessage(int customerID, String firstName, String lastName, int numberOfDivingSuits, int numberOfSurfboards) {
@@ -17,6 +18,7 @@ public class OrderMessage {
         this.lastName = lastName;
         this.numberOfDivingSuits = numberOfDivingSuits;
         this.numberOfSurfboards = numberOfSurfboards;
+        this.orderID = -1;
 
         this.overallItems = -1;
         this.valid = false;
@@ -30,6 +32,7 @@ public class OrderMessage {
         this.overallItems = overallItems;
         this.numberOfDivingSuits = numberOfDivingSuits;
         this.numberOfSurfboards = numberOfSurfboards;
+        this.orderID = -1;
         this.valid = valid;
         this.validationResult = validationResult;
     }
@@ -70,6 +73,14 @@ public class OrderMessage {
         return numberOfDivingSuits;
     }
 
+    public int getOrderID() {
+        return orderID;
+    }
+
+    public void setOrderID(int orderID) {
+        this.orderID = orderID;
+    }
+
     public void setNumberOfDivingSuits(int numberOfDivingSuits) {
         this.numberOfDivingSuits = numberOfDivingSuits;
     }
@@ -90,7 +101,7 @@ public class OrderMessage {
         this.valid = valid;
     }
 
-    public String isValidationResult() {
+    public String getValidationResult() {
         return validationResult;
     }
 

@@ -50,7 +50,7 @@ public class WebOrderSystem {
             @Override
             public void configure() throws Exception {
                 from("file:" + foldername + "?fileName=" + filename + "&noop=true")
-                    .split(body().tokenize("\n"))
+                    .split(body().tokenize("\r\n"))
                     .process(new WOSInputTransformer()) //transformWOS
                     .process(new ContentEnricher())//enrich Message
 
@@ -64,9 +64,9 @@ public class WebOrderSystem {
                         System.out.println(content.toString());
                     })
 
-                    .to("activemq:queue:orderIDGenIn");  //to queue channel TODO might be incorrectly implemented
-                    //.transform(body().append("\n"));
-                    //.to("file:" + DESTINATION_FOLDER + "?fileName=webordersystemoutput.txt&noop=true&fileExist=Append"); //only for debugging
+                    //.to("activemq:queue:orderIDGenIn");  //to queue channel TODO might be incorrectly implemented
+                     .transform(body().append("\n"))
+                    .to("file:" + DESTINATION_FOLDER + "?fileName=webordersystemoutput.txt&noop=true&fileExist=Append"); //only for debugging
             }
         });
         camelContext.start();
