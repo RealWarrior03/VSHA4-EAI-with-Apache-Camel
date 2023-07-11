@@ -9,6 +9,7 @@ public class OrderMessage {
     private int numberOfSurfboards;
     private boolean valid;
     private String validationResult;
+    private boolean resSysWasHere;
     private int orderID;
 
 
@@ -23,6 +24,7 @@ public class OrderMessage {
         this.overallItems = -1;
         this.valid = false;
         this.validationResult = null;
+        resSysWasHere = false;
     }
 
     public OrderMessage(int customerID, String firstName, String lastName, int overallItems, int numberOfDivingSuits, int numberOfSurfboards, boolean valid, String validationResult) {
@@ -35,6 +37,15 @@ public class OrderMessage {
         this.orderID = -1;
         this.valid = valid;
         this.validationResult = validationResult;
+        resSysWasHere = false;
+    }
+
+    public boolean isResSysWasHere() {
+        return resSysWasHere;
+    }
+
+    public void setResSysWasHere(boolean resSysWasHere) {
+        this.resSysWasHere = resSysWasHere;
     }
 
     public int getCustomerID() {

@@ -1,5 +1,6 @@
+package ResultSystem;
+
 import OrderMessage.OrderMessage;
-import WebOrderSystem.WOSInputTransformer;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
@@ -7,10 +8,7 @@ import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.processor.aggregate.AggregationStrategy;
 
-import javax.jms.Connection;
-import javax.jms.Queue;
-import javax.jms.Session;
-import javax.jms.Topic;
+import javax.jms.*;
 
 public class ResultSystem {
     CamelContext camelContext = new DefaultCamelContext();
@@ -23,6 +21,8 @@ public class ResultSystem {
             connection.start();
             Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
             Queue resultIn = session.createQueue("resultIn");
+            Topic resultOut = session.createTopic("resultOut");
+            MessageProducer resultProducer = session.createProducer(resultOut);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -37,17 +37,20 @@ public class ResultSystem {
                             public Exchange aggregate(Exchange exchange1, Exchange exchange2) {
                                 OrderMessage om1 = exchange1.getIn().getBody(OrderMessage.class);
                                 OrderMessage om2 = exchange2.getIn().getBody(OrderMessage.class);
-                                if(!(om1.isValid()&& om2.isValid())){
+                                if (!(om1.isValid() && om2.isValid())) {
                                     om1.setValid(false);
-                                    om1.setValidationResult(om1.getValidationResult()+om2.getValidationResult());
+                                    om1.setValidationResult(om1.getValidationResult() + om2.getValidationResult());
                                 }
+                                om1.setResSysWasHere(true);
                                 exchange1.getIn().setBody(om1);
                                 return exchange1;
                             }
                         })
                         .log(body().toString())
-                        .end();
-                        //.to("activemq:topic:new_order");  //pubsub channel TODO might be incorrectly implemented
+                        .to("activemq:topic:resultOut");
+
+
+                //.to("activemq:topic:new_order");  //pubsub channel TODO might be incorrectly implemented
             }
         });
 

@@ -65,9 +65,9 @@ public class WebOrderSystem {
                         System.out.println(content.toString());
                     })
 
-                    //.to("activemq:queue:orderIDGenIn");  //to queue channel TODO might be incorrectly implemented
-                     .transform(body().append("\n"))
-                    .to("file:" + DESTINATION_FOLDER + "?fileName=webordersystemoutput.txt&noop=true&fileExist=Append"); //only for debugging
+                    .to("activemq:queue:orderIDGenIn");  //to queue channel TODO might be incorrectly implemented
+                     //.transform(body().append("\n"))
+                    //.to("file:" + DESTINATION_FOLDER + "?fileName=webordersystemoutput.txt&noop=true&fileExist=Append"); //only for debugging
             }
         });
         camelContext.start();

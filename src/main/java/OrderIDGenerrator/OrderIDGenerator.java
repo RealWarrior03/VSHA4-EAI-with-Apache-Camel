@@ -22,12 +22,13 @@ public class OrderIDGenerator {
             connection.start();
             Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
             Queue orderIDGenIn = session.createQueue("orderIDGenIn");
+            Topic new_order = session.createTopic("new_order");
             //MessageProducer producer = session.createProducer(topic);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        Thread.sleep(10000);
+        Thread.sleep(5000);
 
         CamelContext camelContext = new DefaultCamelContext();
         camelContext.addRoutes(new RouteBuilder() {
@@ -41,8 +42,6 @@ public class OrderIDGenerator {
             }
         });
         camelContext.start();
-
-        //camelContext.createProducerTemplate().sendBody("direct:start", "Peter, Parker, 2, 0, 1");
 
         Thread.sleep(5000);
 
