@@ -45,7 +45,7 @@ public class ResultSystem {
                                 return exchange1;
                             }
                         })
-                        .log("${body}")
+                        .log(body().toString())
                         .end();
                         //.to("activemq:topic:new_order");  //pubsub channel TODO might be incorrectly implemented
             }

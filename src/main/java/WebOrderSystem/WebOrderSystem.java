@@ -31,6 +31,7 @@ public class WebOrderSystem {
         String foldername = args[0];
         String filename = args[1];
 
+
         //activemq stuff
         ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory("tcp://localhost:61616");
         connectionFactory.setTrustAllPackages(true);
@@ -50,7 +51,7 @@ public class WebOrderSystem {
             @Override
             public void configure() throws Exception {
                 from("file:" + foldername + "?fileName=" + filename + "&noop=true")
-                    .split(body().tokenize("\r\n"))
+                    .split(body().tokenize(System.getProperty("line.separator")))
                     .process(new WOSInputTransformer()) //transformWOS
                     .process(new ContentEnricher())//enrich Message
 
