@@ -7,11 +7,11 @@
   - [x] process
   - [x] enrich
   - [x] to
-- [ ] CallCenterOrderSystem
-  - [ ] from
+- [x] CallCenterOrderSystem
+  - [x] from
   - [x] process (transformer should work, not debugged yet)
-  - [ ] enrich
-  - [ ] to
+  - [x] enrich
+  - [x] to
 - [ ] BillingSystem
 - [ ] InventorySystem
 - [ ] ResultSystem
