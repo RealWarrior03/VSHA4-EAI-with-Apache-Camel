@@ -1,4 +1,4 @@
-import WebOrderSystem.ContentEnricher;
+import ContentEnricher.*;
 import WebOrderSystem.WOSInputTransformer;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.camel.CamelContext;

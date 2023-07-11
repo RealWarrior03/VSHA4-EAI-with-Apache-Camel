@@ -8,9 +8,8 @@
   - [x] enrich
   - [x] to
 - [ ] CallCenterOrderSystem
-  - notes: basically similar to WOS; file is only read every 120s, transformer works differently, target: orderIDGenIn
   - [ ] from
-  - [ ] process
+  - [x] process (transformer should work, not debugged yet)
   - [ ] enrich
   - [ ] to
 - [ ] BillingSystem
