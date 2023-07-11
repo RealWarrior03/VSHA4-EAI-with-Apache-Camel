@@ -10,9 +10,16 @@ import org.junit.jupiter.api.Order;
 
 import javax.jms.*;
 
+// TODO anstatt string mit Messages arbeiten
+// TODO nachricht richtig an Resultsystem weiterleiten
+// TODO CustomerCreditStanding logik implementieren
+// TODO Betrag abziehen wenn Rückmeldung von Resultsystem
+// TODO CustumerCredits Datenbank oder so in Billingsystempackage machen
+
 public class BillingSystem {
-    //TODO aggregatorInBilling in resultsystem erstellen
+
     public static void main(String[] args) throws Exception {
+        CustomerCreditStanding processCCS = new CustomerCreditStanding();
         /*
         DefaultCamelContext ctxt = new DefaultCamelContext();
         ActiveMQComponent activeMQComponent = ActiveMQComponent.activeMQComponent();
@@ -56,22 +63,45 @@ public class BillingSystem {
             e.printStackTrace();
         }
 
+
         CamelContext camelContext = new DefaultCamelContext();
         camelContext.addRoutes(new RouteBuilder() {
             @Override
             public void configure() throws Exception {
                 from("activemq:topic:new_order")
 
+                        .process(processCCS)
                         .process(exchange -> {
                             // Hole den Inhalt der Datei
-                            String content = exchange.getIn().getBody(String.class);
+                            OrderMessage content = exchange.getIn().getBody(OrderMessage.class);
 
                             // Gib den Inhalt in der Konsole aus
-                            System.out.println("Inhalt der Datei: " + content);
+                            System.out.println("Content of the OrderMessage Object");
+                            System.out.println(content.toString());
                         })
 
-                        .process(new CustomerCreditStanding())
-                        .to("activemq:queue:aggregatorInBilling"); //TODO setup queue in resultsystem
+
+                        .to("activemq:queue:resultIn");
+            }
+        });
+
+        camelContext.addRoutes(new RouteBuilder() {
+            @Override
+            public void configure() throws Exception {
+                from("activemq:topic:resultOut")
+
+                        .process(processCCS)
+                        .process(exchange -> {
+                            // Hole den Inhalt der Datei
+                            OrderMessage content = exchange.getIn().getBody(OrderMessage.class);
+
+                            // Gib den Inhalt in der Konsole aus
+                            System.out.println("Content of the OrderMessage Object");
+                            System.out.println(content.toString());
+                        })
+
+
+                        .to("activemq:queue:resultIn");
             }
         });
         camelContext.start();
