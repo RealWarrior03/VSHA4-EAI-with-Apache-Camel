@@ -1,10 +1,12 @@
 package BillingSystem;
 
+import OrderMessage.OrderMessage;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.camel.component.ActiveMQComponent;
 import org.apache.camel.CamelContext;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.impl.DefaultCamelContext;
+import org.junit.jupiter.api.Order;
 
 import javax.jms.*;
 
@@ -26,7 +28,30 @@ public class BillingSystem {
             connection.start();
             Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
             Topic topic = session.createTopic("new_order");
+            Queue resultIn = session.createQueue("resultIn");
+
             //MessageProducer producer = session.createProducer(topic);
+            Topic topicToBeProcessed = session.createTopic("resultOut");
+            MessageConsumer validOrderConsumer = session.createConsumer(topicToBeProcessed);
+            validOrderConsumer.setMessageListener(new MessageListener() {
+                @Override
+                public void onMessage(Message message) {
+                    if (message instanceof ObjectMessage){
+                        try {
+                            OrderMessage mes = (OrderMessage) ((ObjectMessage) message).getObject();
+                            //TODO wait for datastructure and manipulate it
+                        } catch (JMSException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+
+
+
+                }
+            });
+
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }

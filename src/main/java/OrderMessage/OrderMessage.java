@@ -1,6 +1,8 @@
 package OrderMessage;
 
-public class OrderMessage {
+import java.io.Serializable;
+
+public class OrderMessage implements Serializable {
     private int customerID;
     private String firstName;
     private String lastName;
