@@ -24,16 +24,16 @@
   - [x] process
   - [x] enrich
   - [x] to
-- [ ] CallCenterOrderSystem
-  - [ ] from
-  - [x] process (transformer should work, not debugged yet)
-  - [ ] enrich
+- [x] CallCenterOrderSystem
+  - [x] from
+  - [x] process
+  - [x] enrich
   - [ ] to
 - [ ] BillingSystem
+  - [ ] CustomerCreditStanding
 - [ ] InventorySystem
 - [ ] ResultSystem.ResultSystem
 - [ ] Database
-  - [ ] Customers
   - [ ] Inventory
 
 # Bugs

@@ -2,6 +2,7 @@ package BillingSystem;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
+import java.util.HashMap;
 
 public class CustomerCreditStanding implements Processor{
     private static int priceOfSurfBoard = 420;

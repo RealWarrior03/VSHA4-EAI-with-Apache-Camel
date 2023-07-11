@@ -39,7 +39,7 @@ public class CallCenterOrderSystem {
             Connection connection = connectionFactory.createConnection();
             connection.start();
             Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-            Queue queue = session.createQueue("order_IDGen-In");
+            Queue queue = session.createQueue("orderIDGenIn");
         } catch (Exception e) {
             e.printStackTrace();
         }
