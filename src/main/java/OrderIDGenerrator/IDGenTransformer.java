@@ -5,9 +5,11 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 
 public class IDGenTransformer implements Processor {
+    int nextID=1;
     @Override
     public void process(Exchange exchange) throws Exception {
         OrderMessage om = exchange.getIn().getBody(OrderMessage.class);
-        om.
+        om.setOrderID(nextID);
+        nextID++;
     }
 }
