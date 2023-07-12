@@ -11,5 +11,6 @@ public class IDGenTransformer implements Processor {
         OrderMessage om = exchange.getIn().getBody(OrderMessage.class);
         om.setOrderID(nextID);
         nextID++;
+        exchange.getIn().setBody(om);
     }
 }
