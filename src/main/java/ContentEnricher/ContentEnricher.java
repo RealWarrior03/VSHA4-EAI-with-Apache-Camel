@@ -19,6 +19,6 @@ public class ContentEnricher implements Processor {
         OrderMessage message = exchange.getIn().getBody(OrderMessage.class);
         message.setOverallItems(message.getNumberOfSurfboards() + message.getNumberOfDivingSuits());
 
-        exchange.getOut().setBody(message);
+        exchange.getIn().setBody(message);//Changed Out to In
     }
 }

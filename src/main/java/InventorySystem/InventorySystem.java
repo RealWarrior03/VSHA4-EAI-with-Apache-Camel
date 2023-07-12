@@ -1,5 +1,6 @@
-package BillingSystem;
+package InventorySystem;
 
+import BillingSystem.CustomerCreditStanding;
 import OrderMessage.OrderMessage;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.camel.component.ActiveMQComponent;
@@ -16,10 +17,12 @@ import javax.jms.*;
 // TODO Betrag abziehen wenn Rückmeldung von Resultsystem
 // TODO CustumerCredits Datenbank oder so in Billingsystempackage machen
 
-public class BillingSystem {
+public class InventorySystem {
+
+    private int availableSurfBoards = 100;
+    private int availableDivingSuits = 100;
 
     public static void main(String[] args) throws Exception {
-        CustomerCreditStanding processCCS = new CustomerCreditStanding();
         /*
         DefaultCamelContext ctxt = new DefaultCamelContext();
         ActiveMQComponent activeMQComponent = ActiveMQComponent.activeMQComponent();
@@ -38,7 +41,7 @@ public class BillingSystem {
             Queue resultIn = session.createQueue("resultIn");
 
             //MessageProducer producer = session.createProducer(topic);
-            Topic topicToBeProcessed = session.createTopic("resultOut");
+            Topic topicToBeProcessed = session.createTopic("valid_order");
             MessageConsumer validOrderConsumer = session.createConsumer(topicToBeProcessed);
             validOrderConsumer.setMessageListener(new MessageListener() {
                 @Override
@@ -51,9 +54,6 @@ public class BillingSystem {
                             throw new RuntimeException(e);
                         }
                     }
-
-
-
                 }
             });
 
@@ -63,34 +63,13 @@ public class BillingSystem {
             e.printStackTrace();
         }
 
-
         CamelContext camelContext = new DefaultCamelContext();
         camelContext.addRoutes(new RouteBuilder() {
             @Override
             public void configure() throws Exception {
                 from("activemq:topic:new_order")
 
-                        .process(processCCS)
-                        .process(exchange -> {
-                            // Hole den Inhalt der Datei
-                            OrderMessage content = exchange.getIn().getBody(OrderMessage.class);
-
-                            // Gib den Inhalt in der Konsole aus
-                            System.out.println("Content of the OrderMessage Object");
-                            System.out.println(content.toString());
-                        })
-
-
-                        .to("activemq:queue:resultIn");
-            }
-        });
-
-        camelContext.addRoutes(new RouteBuilder() {
-            @Override
-            public void configure() throws Exception {
-                from("activemq:topic:resultOut")
-
-                        .process(processCCS)
+                        .process(new CustomerCreditStanding()) //TODO change for inventory system maybe store data in process
                         .process(exchange -> {
                             // Hole den Inhalt der Datei
                             OrderMessage content = exchange.getIn().getBody(OrderMessage.class);
@@ -105,9 +84,6 @@ public class BillingSystem {
             }
         });
         camelContext.start();
-
-        Thread.sleep(500000);
-
-        camelContext.stop();
+        //camelContext.stop();
     }
 }
