@@ -105,6 +105,9 @@ public class BillingSystem {
             }
         });
         camelContext.start();
-        //camelContext.stop();
+
+        Thread.sleep(500000);
+
+        camelContext.stop();
     }
 }

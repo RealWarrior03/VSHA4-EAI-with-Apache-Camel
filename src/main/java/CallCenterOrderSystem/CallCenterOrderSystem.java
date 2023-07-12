@@ -73,7 +73,7 @@ public class CallCenterOrderSystem {
 
             //camelContext.createProducerTemplate().sendBody("direct:start", "Peter, Parker, 2, 0, 1");
 
-            Thread.sleep(5000);
+            Thread.sleep(500000);
 
             camelContext.stop();
 
