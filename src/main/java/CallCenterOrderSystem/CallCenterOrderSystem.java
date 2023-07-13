@@ -64,16 +64,16 @@ public class CallCenterOrderSystem {
                                 System.out.println("Content of the OrderMessage Object");
                                 System.out.println(content.toString());
                             })
-                            .to("activemq:queue:orderIDGenIn"); //to queue channel TODO might be incorrectly implemented
-                            //.transform(body().append("\n"))
-                            //.to("file:" + DESTINATION_FOLDER + "?fileName=callcenterordersystemoutput.txt&noop=true&fileExist=Append"); //only for debugging
+                            .to("activemq:queue:orderIDGenIn") //to queue channel TODO might be incorrectly implemented
+                            .transform(body().append("\n"))
+                            .to("file:" + DESTINATION_FOLDER + "?fileName=callcenterordersystemoutput.txt&noop=true&fileExist=Append"); //only for debugging
                 }
             });
             camelContext.start();
 
             //camelContext.createProducerTemplate().sendBody("direct:start", "Peter, Parker, 2, 0, 1");
 
-            Thread.sleep(500000);
+            Thread.sleep(5000);
 
             camelContext.stop();
 
