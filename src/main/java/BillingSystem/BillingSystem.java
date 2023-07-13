@@ -39,30 +39,9 @@ public class BillingSystem {
 
             //MessageProducer producer = session.createProducer(topic);
             Topic topicToBeProcessed = session.createTopic("resultOut");
-            MessageConsumer validOrderConsumer = session.createConsumer(topicToBeProcessed);
-            validOrderConsumer.setMessageListener(new MessageListener() {
-                @Override
-                public void onMessage(Message message) {
-                    if (message instanceof ObjectMessage){
-                        try {
-                            OrderMessage mes = (OrderMessage) ((ObjectMessage) message).getObject();
-                            //TODO wait for datastructure and manipulate it
-                        } catch (JMSException e) {
-                            throw new RuntimeException(e);
-                        }
-                    }
-
-
-
-                }
-            });
-
-
-
         } catch (Exception e) {
             e.printStackTrace();
         }
-
 
         CamelContext camelContext = new DefaultCamelContext();
         camelContext.addRoutes(new RouteBuilder() {
@@ -79,8 +58,6 @@ public class BillingSystem {
                             System.out.println("Content of the OrderMessage Object");
                             System.out.println(content.toString());
                         })
-
-
                         .to("activemq:queue:resultIn");
             }
         });
@@ -89,7 +66,6 @@ public class BillingSystem {
             @Override
             public void configure() throws Exception {
                 from("activemq:topic:resultOut")
-
                         .process(processCCS)
                         .process(exchange -> {
                             // Hole den Inhalt der Datei
@@ -98,10 +74,7 @@ public class BillingSystem {
                             // Gib den Inhalt in der Konsole aus
                             System.out.println("Content of the OrderMessage Object");
                             System.out.println(content.toString());
-                        })
-
-
-                        .to("activemq:queue:resultIn");
+                        });
             }
         });
         camelContext.start();

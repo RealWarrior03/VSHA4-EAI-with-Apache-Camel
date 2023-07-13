@@ -19,9 +19,6 @@ import javax.jms.*;
 
 public class InventorySystem {
 
-    private int availableSurfBoards = 100;
-    private int availableDivingSuits = 100;
-
     public static void main(String[] args) throws Exception {
         /*
         DefaultCamelContext ctxt = new DefaultCamelContext();
@@ -31,6 +28,7 @@ public class InventorySystem {
         */
         //activemq stuff
 
+        CustomerCreditStanding processIS = new CustomerCreditStanding();
         ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory("tcp://localhost:61616");
         connectionFactory.setTrustAllPackages(true);
         try {
@@ -41,35 +39,18 @@ public class InventorySystem {
             Queue resultIn = session.createQueue("resultIn");
 
             //MessageProducer producer = session.createProducer(topic);
-            Topic topicToBeProcessed = session.createTopic("valid_order");
-            MessageConsumer validOrderConsumer = session.createConsumer(topicToBeProcessed);
-            validOrderConsumer.setMessageListener(new MessageListener() {
-                @Override
-                public void onMessage(Message message) {
-                    if (message instanceof ObjectMessage){
-                        try {
-                            OrderMessage mes = (OrderMessage) ((ObjectMessage) message).getObject();
-                            //TODO wait for datastructure and manipulate it
-                        } catch (JMSException e) {
-                            throw new RuntimeException(e);
-                        }
-                    }
-                }
-            });
-
-
-
+            Topic topicToBeProcessed = session.createTopic("resultOut");
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         CamelContext camelContext = new DefaultCamelContext();
+
         camelContext.addRoutes(new RouteBuilder() {
             @Override
             public void configure() throws Exception {
                 from("activemq:topic:new_order")
-
-                        .process(new CustomerCreditStanding()) //TODO change for inventory system maybe store data in process
+                        .process(processIS)
                         .process(exchange -> {
                             // Hole den Inhalt der Datei
                             OrderMessage content = exchange.getIn().getBody(OrderMessage.class);
@@ -78,9 +59,23 @@ public class InventorySystem {
                             System.out.println("Content of the OrderMessage Object");
                             System.out.println(content.toString());
                         })
-
-
                         .to("activemq:queue:resultIn");
+            }
+        });
+
+        camelContext.addRoutes(new RouteBuilder() {
+            @Override
+            public void configure() throws Exception {
+                from("activemq:topic:resultOut")
+                        .process(processIS)
+                        .process(exchange -> {
+                            // Hole den Inhalt der Datei
+                            OrderMessage content = exchange.getIn().getBody(OrderMessage.class);
+
+                            // Gib den Inhalt in der Konsole aus
+                            System.out.println("Content of the OrderMessage Object");
+                            System.out.println(content.toString());
+                        });
             }
         });
         camelContext.start();
