@@ -2,12 +2,7 @@
 - to be written
 
 # To-Do
-- BillingSystem Package
-  - [ ] Anstatt String mit Messages arbeiten
-  - [ ] Nachricht richtig ans ResultSystem.ResultSystem weiterleiten
-  - [ ] CustomerCreditStanding Logik implementieren
-  - [ ] Betrag abziehen, wenn Rückmeldung vom ResultSystem.ResultSystem kommt
-  - [ ] CustomerCreditStanding ins BillingSystem migrieren
+- debugging
 
 # Questions
 - CCOS
@@ -29,12 +24,10 @@
   - [x] process
   - [x] enrich
   - [x] to
-- [ ] BillingSystem
-  - [ ] CustomerCreditStanding
-- [ ] InventorySystem
-- [ ] ResultSystem.ResultSystem
-- [ ] Database
-  - [ ] Inventory
+- [x] BillingSystem
+  - [x] CustomerCreditStanding
+- [x] InventorySystem
+- [x] ResultSystem
 
 # Bugs
 - nothing
