@@ -14,6 +14,35 @@ public class OrderMessage implements Serializable {
     private boolean resSysWasHere;
     private int orderID;
 
+    public OrderMessage(String[] params) throws Exception {
+        if(params.length == 5){
+            this.customerID = Integer.parseInt(params[0]);
+            this.firstName = params[1];
+            this.lastName = params[2];
+            this.numberOfDivingSuits = Integer.parseInt(params[3]);
+            this.numberOfSurfboards = Integer.parseInt(params[4]);
+
+
+            this.overallItems = -1;
+            this.valid = false;
+            this.validationResult = null;
+            this.orderID = -1;
+            resSysWasHere = false;
+        }else if(params.length == 10){
+            this.customerID = Integer.parseInt(params[0]);
+            this.firstName = params[1];
+            this.lastName = params[2];
+            this.numberOfDivingSuits = Integer.parseInt(params[3]);
+            this.numberOfSurfboards = Integer.parseInt(params[4]);
+            this.overallItems = Integer.parseInt(params[5]);
+            this.valid = StringToBool(params[6]);
+            this.validationResult = params[7];
+            this.orderID = Integer.parseInt(params[8]);
+            resSysWasHere = StringToBool(params[9]);
+        }else{
+            throw new Exception("Error while constructing OrderMessage");
+        }
+    }
 
     public OrderMessage(int customerID, String firstName, String lastName, int numberOfDivingSuits, int numberOfSurfboards) {
         this.customerID = customerID;
@@ -21,8 +50,8 @@ public class OrderMessage implements Serializable {
         this.lastName = lastName;
         this.numberOfDivingSuits = numberOfDivingSuits;
         this.numberOfSurfboards = numberOfSurfboards;
-        this.orderID = -1;
 
+        this.orderID = -1;
         this.overallItems = -1;
         this.valid = false;
         this.validationResult = null;
@@ -40,6 +69,40 @@ public class OrderMessage implements Serializable {
         this.valid = valid;
         this.validationResult = validationResult;
         resSysWasHere = false;
+    }
+
+
+    public String[] getAllValuesAsStringArray(){
+        String[] values = new String[10];
+
+        values[0] = Integer.toString(this.customerID);
+        values[1] = this.firstName;
+        values[2] = this.lastName;
+        values[3] = Integer.toString(this.numberOfDivingSuits);
+        values[4] = Integer.toString(this.numberOfSurfboards);
+        values[5] = Integer.toString(this.overallItems);
+        values[6] = BoolToString(this.valid);
+        values[7] = this.validationResult;
+        values[8] = Integer.toString(this.orderID);
+        values[9] = BoolToString(this.resSysWasHere);
+
+        return  values;
+    }
+
+    private String BoolToString(boolean bool){
+        if (bool){
+            return "true";
+        }else{
+            return "false";
+        }
+    }
+
+    private boolean StringToBool(String string){
+        if(string == "true"){
+            return true;
+        }else{
+            return false;
+        }
     }
 
     public boolean isResSysWasHere() {
