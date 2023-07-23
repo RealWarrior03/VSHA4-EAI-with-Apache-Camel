@@ -10,12 +10,6 @@ import org.junit.jupiter.api.Order;
 
 import javax.jms.*;
 
-// TODO anstatt string mit Messages arbeiten
-// TODO nachricht richtig an Resultsystem weiterleiten
-// TODO CustomerCreditStanding logik implementieren
-// TODO Betrag abziehen wenn Rückmeldung von Resultsystem
-// TODO CustumerCredits Datenbank oder so in Billingsystempackage machen
-
 public class BillingSystem {
 
     public static void main(String[] args) throws Exception {
