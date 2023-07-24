@@ -47,7 +47,9 @@ public class ResultSystem {
                         })
                         .log(body().toString())
                         .process(new OrderMessageToNormedStringConverter())
-                        .to("activemq:topic:resultOut");
+                        .to("activemq:topic:resultOut")
+                        .transform(body().append("\n"))
+                        .to("file:src/main/outputfiles?fileName=resultOutputFile.txt&noop=true&fileExist=Append");
 
 
                 //.to("activemq:topic:new_order");  //pubsub channel TODO might be incorrectly implemented

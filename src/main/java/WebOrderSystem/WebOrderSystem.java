@@ -1,8 +1,10 @@
 package WebOrderSystem;
 
+import Client.Client;
 import ContentEnricher.*;
 import OrderMessage.*;
 import org.apache.camel.CamelContext;
+import org.apache.camel.ProducerTemplate;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.activemq.ActiveMQConnectionFactory;
@@ -32,7 +34,6 @@ public class WebOrderSystem {
         String foldername = args[0];
         String filename = args[1];
 
-
         //activemq stuff
         ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory("tcp://localhost:61616");
         connectionFactory.setTrustAllPackages(true);
@@ -46,7 +47,6 @@ public class WebOrderSystem {
         }
 
         Thread.sleep(10000);
-
         CamelContext camelContext = new DefaultCamelContext();
             camelContext.addRoutes(new RouteBuilder() {
                 @Override
@@ -70,24 +70,3 @@ public class WebOrderSystem {
         //camelContext.stop();
     }
 }
-
-/*
-o CustomerID
-o FirstName
-o LastName
-o OverallItems (Number of all items in order)
-o NumberOfDivingSuits
-o NumberOfSurfboards o OrderID
-o Valid
-o validationResult
-
- .process(exchange -> {
-                        // Hole den Inhalt der Datei
-                        String content = exchange.getIn().getBody(String.class);
-
-                        // Gib den Inhalt in der Konsole aus
-                        System.out.println("Inhalt der Datei: " + content);
-                    })
-
-
- */

@@ -62,9 +62,5 @@ public class BillingSystem {
             }
         });
         camelContext.start();
-
-        Thread.sleep(500000);
-
-        camelContext.stop();
     }
 }
