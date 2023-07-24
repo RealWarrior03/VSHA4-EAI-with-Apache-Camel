@@ -51,8 +51,9 @@ public class CallCenterOrderSystem {
             camelContext.addRoutes(new RouteBuilder() {
                 @Override
                 public void configure() throws Exception {
-                    from("file:" + foldername + "?fileName=" + filename + "&noop=true")
-                            .split(body().tokenize("\n"))
+                    //from("file:" + foldername + "?fileName=" + filename + "&noop=true&scheduler=quartz2&scheduler.cron=0+0/2+*+*+*+?")
+                    from("file:" + foldername + "?fileName=" + filename + "&delay=120000")
+                            .split(body().tokenize(System.getProperty("line.separator")))
                             .process(new CCOSInputTransformer()) //transformCCOS
                             .process(new ContentEnricher())//enrich Message
                             .process(new OrderMessageToNormedStringConverter())
