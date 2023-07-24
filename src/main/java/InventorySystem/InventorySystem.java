@@ -36,15 +36,9 @@ public class InventorySystem {
             @Override
             public void configure() throws Exception {
                 from("activemq:topic:new_order")
+                        .process(new NormedStringToOrderMessageConverter())
                         .process(processIS)
-                        .process(exchange -> {
-                            // Hole den Inhalt der Datei
-                            OrderMessage content = exchange.getIn().getBody(OrderMessage.class);
-
-                            // Gib den Inhalt in der Konsole aus
-                            System.out.println("Content of the OrderMessage Object");
-                            System.out.println(content.toString());
-                        })
+                        .process(new OrderMessageToNormedStringConverter())
                         .to("activemq:queue:resultIn");
             }
         });
@@ -53,6 +47,7 @@ public class InventorySystem {
             @Override
             public void configure() throws Exception {
                 from("activemq:topic:resultOut")
+                        .process(new NormedStringToOrderMessageConverter())
                         .process(processIS)
                         .process(exchange -> {
                             // Hole den Inhalt der Datei
