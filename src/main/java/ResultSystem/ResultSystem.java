@@ -1,6 +1,6 @@
 package ResultSystem;
 
-import OrderMessage.OrderMessage;
+import OrderMessage.*;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;

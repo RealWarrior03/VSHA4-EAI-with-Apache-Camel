@@ -56,7 +56,7 @@ public class WebOrderSystem {
                     .process(new ContentEnricher())//enrich Message
                     .process(new OrderMessageToNormedStringConverter())
                     .to("activemq:queue:orderIDGenIn");  //to queue channel TODO might be incorrectly implemented
-                     //.transform(body().append("\n"))
+                    //.transform(body().append("\n"))
                     //.to("file:" + DESTINATION_FOLDER + "?fileName=webordersystemoutput.txt&noop=true&fileExist=Append"); //only for debugging
             }
         });

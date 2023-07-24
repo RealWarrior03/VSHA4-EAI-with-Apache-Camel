@@ -1,7 +1,7 @@
 package InventorySystem;
 
 import BillingSystem.CustomerCreditStanding;
-import OrderMessage.OrderMessage;
+import OrderMessage.*;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.camel.component.ActiveMQComponent;
 import org.apache.camel.CamelContext;
