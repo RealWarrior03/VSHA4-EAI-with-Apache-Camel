@@ -1,6 +1,7 @@
 package OrderMessage;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class OrderMessage implements Serializable {
     private int customerID;
@@ -98,11 +99,7 @@ public class OrderMessage implements Serializable {
     }
 
     private boolean StringToBool(String string){
-        if(string == "true"){
-            return true;
-        }else{
-            return false;
-        }
+        return Objects.equals(string, "true");
     }
 
     public boolean isResSysWasHere() {
@@ -196,8 +193,8 @@ public class OrderMessage implements Serializable {
             overallItemsPlaceholder = Integer.toString(overallItems);
         }
 
-        return (Integer.toString(customerID) + ", " + firstName + ", " + lastName + ", " + overallItemsPlaceholder
-                + ", " + Integer.toString(numberOfDivingSuits) + ", " + Integer.toString(numberOfSurfboards) + ", "
-                + String.valueOf(valid) + ", " + validationResultPlaceholder);
+        return (Integer.toString(customerID) + ", " + firstName + ", " + lastName + ", Overall: " + overallItemsPlaceholder
+                + ", DivingSuits: " + Integer.toString(numberOfDivingSuits) + ", Surfboards: " + Integer.toString(numberOfSurfboards) + ", Valid: "
+                + String.valueOf(valid) + ", validation Result: " + validationResultPlaceholder+ ", ResSysWasHere: "+String.valueOf(resSysWasHere) +", OrderID: " + Integer.toString(orderID));
     }
 }

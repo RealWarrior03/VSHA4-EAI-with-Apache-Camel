@@ -15,7 +15,7 @@ import javax.jms.*;
 public class InventorySystem {
 
     public static void main(String[] args) throws Exception {
-        CustomerCreditStanding processIS = new CustomerCreditStanding();
+        InventoryStanding processIS = new InventoryStanding();
         ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory("tcp://localhost:61616");
         connectionFactory.setTrustAllPackages(true);
         try {

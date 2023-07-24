@@ -7,6 +7,7 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.impl.DefaultCamelContext;
+import PrintDebug.PrintDebug;
 import org.apache.camel.processor.aggregate.AggregationStrategy;
 
 import javax.jms.*;
@@ -36,16 +37,33 @@ public class ResultSystem {
             public void configure() throws Exception {
                 from("activemq:queue:resultIn")
                         .process(new NormedStringToOrderMessageConverter())
-                        .process(new Processor() { // Temporary to test the sys w/o inventory TODO: Remove
+                        //.log("-------------INPUT------------")
+                        //.process(new PrintDebug())
+                        /*.process(new Processor() {
                             @Override
                             public void process(Exchange exchange) throws Exception {
-                                OrderMessage om1 = exchange.getIn().getBody(OrderMessage.class);
+                                OrderMessage om = exchange.getIn().getBody(OrderMessage.class);
+                                exchange.getIn().setHeader("OrderID", om.getOrderID());
+                            }
+                        })*/
+                        .aggregate(body().method("getOrderID"), new AggregationStrategy() {
+                            @Override
+                            public Exchange aggregate(Exchange exchange1, Exchange exchange2) {
+                                if(exchange1 == null){
+                                    return exchange2;
+                                }
+                                OrderMessage om1 = exchange1.getIn().getBody(OrderMessage.class);
+                                OrderMessage om2 = exchange2.getIn().getBody(OrderMessage.class);
+                                om1.setValid(om1.isValid() && om2.isValid());
+                                om1.setValidationResult(om1.getValidationResult()+" and "+om2.getValidationResult());
                                 om1.setResSysWasHere(true);
-                                om1.setValid(true);
-                                exchange.getIn().setBody(om1);
+                                exchange1.getIn().setBody(om1);
+                                return exchange1;
                             }
                         })
-                        .log(body().toString())
+                        .completionSize(2)
+                        .log("-------------OUTPUT------------")
+                        .process(new PrintDebug())
                         .process(new OrderMessageToNormedStringConverter())
                         .to("activemq:topic:resultOut")
                         .transform(body().append("\n"))

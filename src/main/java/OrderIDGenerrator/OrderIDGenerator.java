@@ -2,6 +2,7 @@ package OrderIDGenerrator;
 
 import ContentEnricher.ContentEnricher;
 import OrderMessage.OrderMessage;
+import PrintDebug.PrintDebug;
 import WebOrderSystem.WOSInputTransformer;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.camel.CamelContext;
@@ -38,7 +39,9 @@ public class OrderIDGenerator {
             public void configure() throws Exception {
                 from("activemq:queue:orderIDGenIn")
                         .process(new NormedStringToOrderMessageConverter())
+                        .process(new PrintDebug())
                         .process(new IDGenTransformer())
+                        .process(new PrintDebug())
                         .process(new OrderMessageToNormedStringConverter())
                         .to("activemq:topic:new_order");  //pubsub channel TODO might be incorrectly implemented
                 //.transform(body().append("\n"))

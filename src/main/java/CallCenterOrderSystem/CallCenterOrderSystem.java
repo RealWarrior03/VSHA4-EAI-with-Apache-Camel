@@ -46,7 +46,6 @@ public class CallCenterOrderSystem {
 
         Thread.sleep(5000);
 
-        while (true) {
             CamelContext camelContext = new DefaultCamelContext();
             camelContext.addRoutes(new RouteBuilder() {
                 @Override
