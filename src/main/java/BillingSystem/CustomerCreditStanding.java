@@ -7,8 +7,8 @@ import java.util.HashMap;
 
 public class CustomerCreditStanding implements Processor{
     HashMap<Integer, Integer> customerHashMap = new HashMap<>();
-    private static int priceOfSurfBoard = 420;
-    private static int priceOfDivingSuit = 69;
+    private static int priceOfSurfBoard = 250;
+    private static int priceOfDivingSuit = 150;
 
     /*
     INPUT
@@ -44,7 +44,7 @@ public class CustomerCreditStanding implements Processor{
             } else {
                 //substract valueOfOrder anyway for consistency reasons
                 customerHashMap.put(customerID, customerHashMap.get(customerID) - valueOfOrder);
-                message.setValidationResult("costumer is too broke for this order");
+                message.setValidationResult("customer is too broke for this order");
             }
         } else {
             if (!message.isValid()) {

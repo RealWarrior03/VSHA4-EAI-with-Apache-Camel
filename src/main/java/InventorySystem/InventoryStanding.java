@@ -5,8 +5,8 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 
 public class InventoryStanding implements Processor {
-    private int availableSurfBoards = 100;
-    private int availableDivingSuits = 100;
+    private int availableSurfBoards = 3;
+    private int availableDivingSuits = 5;
 
     @Override
     public void process(Exchange exchange) throws Exception {

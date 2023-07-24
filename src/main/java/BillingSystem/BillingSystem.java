@@ -1,6 +1,7 @@
 package BillingSystem;
 
 import OrderMessage.*;
+import PrintDebug.PrintDebug;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.camel.component.ActiveMQComponent;
 import org.apache.camel.CamelContext;
@@ -36,7 +37,9 @@ public class BillingSystem {
             public void configure() throws Exception {
                 from("activemq:topic:new_order")
                         .process(new NormedStringToOrderMessageConverter())
+                        .process(new PrintDebug())
                         .process(processCCS)
+                        .process(new PrintDebug())
                         .process(new OrderMessageToNormedStringConverter())
                         .to("activemq:queue:resultIn");
             }

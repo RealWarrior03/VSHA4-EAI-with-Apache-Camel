@@ -44,7 +44,7 @@ public class CallCenterOrderSystem {
             e.printStackTrace();
         }
 
-        Thread.sleep(10000);
+        Thread.sleep(5000);
 
         while (true) {
             CamelContext camelContext = new DefaultCamelContext();
@@ -64,12 +64,5 @@ public class CallCenterOrderSystem {
             camelContext.start();
 
             //camelContext.createProducerTemplate().sendBody("direct:start", "Peter, Parker, 2, 0, 1");
-
-            Thread.sleep(5000);
-
-            camelContext.stop();
-
-            Thread.sleep(120000);
-        }
     }
 }

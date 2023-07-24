@@ -8,6 +8,7 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.junit.jupiter.api.Order;
+import PrintDebug.PrintDebug;
 
 import javax.jms.*;
 
@@ -37,7 +38,9 @@ public class InventorySystem {
             public void configure() throws Exception {
                 from("activemq:topic:new_order")
                         .process(new NormedStringToOrderMessageConverter())
+                        .process(new PrintDebug())
                         .process(processIS)
+                        .process(new PrintDebug())
                         .process(new OrderMessageToNormedStringConverter())
                         .to("activemq:queue:resultIn");
             }
@@ -48,6 +51,7 @@ public class InventorySystem {
             public void configure() throws Exception {
                 from("activemq:topic:resultOut")
                         .process(new NormedStringToOrderMessageConverter())
+                        .process(new PrintDebug())
                         .process(processIS)
                         .process(exchange -> {
                             // Hole den Inhalt der Datei

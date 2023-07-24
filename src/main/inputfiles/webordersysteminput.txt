@@ -1,2 +1,7 @@
-Peter, Parker, 1, 2, 1
-Greta, Thunfisch, 2, 3, 2
+Peter, Falschparker, 1, 0, 1
+Greta, Thunfisch, 1, 0, 2
+James, Bondage, 2, 0, 3
+Angela, Ferkel, 1, 0, 4
+Hairy, Otter, 0, 5, 5
+Angela, Ferkel, 1, 0, 4
+Hairy, Otter, 0, 3, 5

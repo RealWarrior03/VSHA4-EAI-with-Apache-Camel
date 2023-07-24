@@ -1,5 +1,0 @@
-1, Justus Jonas, 1, 1
-2, Peter Shaw, 5, 3
-3, Bob Andrews, 4, 3
-4, John Doe, 2, 1
-5, Bames Jond, 4, 2

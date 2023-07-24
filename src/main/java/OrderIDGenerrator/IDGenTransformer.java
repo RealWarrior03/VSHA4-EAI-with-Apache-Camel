@@ -9,6 +9,7 @@ public class IDGenTransformer implements Processor {
     @Override
     public void process(Exchange exchange) throws Exception {
         OrderMessage om = exchange.getIn().getBody(OrderMessage.class);
+
         om.setOrderID(nextID);
         nextID++;
         exchange.getIn().setBody(om);

@@ -6,6 +6,7 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.activemq.ActiveMQConnectionFactory;
+import PrintDebug.PrintDebug;
 
 import javax.jms.*;
 
@@ -47,26 +48,26 @@ public class WebOrderSystem {
         Thread.sleep(10000);
 
         CamelContext camelContext = new DefaultCamelContext();
-        camelContext.addRoutes(new RouteBuilder() {
-            @Override
-            public void configure() throws Exception {
-                from("file:" + foldername + "?fileName=" + filename + "&noop=true")
-                    .split(body().tokenize(System.getProperty("line.separator")))
-                    .process(new WOSInputTransformer()) //transformWOS
-                    .process(new ContentEnricher())//enrich Message
-                    .process(new OrderMessageToNormedStringConverter())
-                    .to("activemq:queue:orderIDGenIn");  //to queue channel TODO might be incorrectly implemented
-                    //.transform(body().append("\n"))
-                    //.to("file:" + DESTINATION_FOLDER + "?fileName=webordersystemoutput.txt&noop=true&fileExist=Append"); //only for debugging
+            camelContext.addRoutes(new RouteBuilder() {
+                @Override
+                public void configure() throws Exception {
+                from("direct:start")
+                        .split(body().tokenize(System.getProperty("line.separator")))
+                        .process(new WOSInputTransformer()) //transformWOS
+                        .process(new ContentEnricher())//enrich Message
+                        .process(new PrintDebug())
+                        .process(new OrderMessageToNormedStringConverter())
+                        .to("activemq:queue:orderIDGenIn");
+                //.transform(body().append("\n"))
+                //.to("file:" + DESTINATION_FOLDER + "?fileName=webordersystemoutput.txt&noop=true&fileExist=Append"); //only for debugging
             }
         });
         camelContext.start();
 
-        //camelContext.createProducerTemplate().sendBody("direct:start", "Peter, Parker, 2, 0, 1");
-
-        Thread.sleep(500000);
-
-        camelContext.stop();
+        while(true){
+            camelContext.createProducerTemplate().sendBody("direct:start", Client.getOrderFromTerminal());
+        }
+        //camelContext.stop();
     }
 }
 
