@@ -9,7 +9,7 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.impl.DefaultCamelContext;
-import OrderMessage.OrderMessage;
+import OrderMessage.*;
 import javax.jms.Connection;
 import javax.jms.Queue;
 import javax.jms.Session;
@@ -37,15 +37,9 @@ public class OrderIDGenerator {
             @Override
             public void configure() throws Exception {
                 from("activemq:queue:orderIDGenIn")
-                        .process(new Processor() {
-                            @Override
-                            public void process(Exchange exchange) throws Exception {
-                                System.out.println("Hallo");
-                                OrderMessage om = exchange.getIn(OrderMessage.class);
-                                System.out.println(om.toString());
-                            }
-                        })
+                        .process(new NormedStringToOrderMessageConverter())
                         .process(new IDGenTransformer())
+                        .process(new OrderMessageToNormedStringConverter())
                         .to("activemq:topic:new_order");  //pubsub channel TODO might be incorrectly implemented
                 //.transform(body().append("\n"))
                 //.to("file:" + DESTINATION_FOLDER + "?fileName=webordersystemoutput.txt&noop=true&fileExist=Append"); //only for debugging

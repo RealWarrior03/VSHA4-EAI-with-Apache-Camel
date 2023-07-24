@@ -35,20 +35,7 @@ public class ResultSystem {
             @Override
             public void configure() throws Exception {
                 from("activemq:queue:resultIn")
-                        /*.aggregate(header("OrderID"), new AggregationStrategy() { // groups by OrderID, If both messages are valid let the first one through if not set valid to false and let the first one through(It will get filtered out)
-                            @Override
-                            public Exchange aggregate(Exchange exchange1, Exchange exchange2) {
-                                OrderMessage om1 = exchange1.getIn().getBody(OrderMessage.class);
-                                OrderMessage om2 = exchange2.getIn().getBody(OrderMessage.class);
-                                if (!(om1.isValid() && om2.isValid())) {
-                                    om1.setValid(false);
-                                    om1.setValidationResult(om1.getValidationResult() + om2.getValidationResult());
-                                }
-                                om1.setResSysWasHere(true);
-                                exchange1.getIn().setBody(om1);
-                                return exchange1;
-                            }
-                        })*/
+                        .process(new NormedStringToOrderMessageConverter())
                         .process(new Processor() { // Temporary to test the sys w/o inventory TODO: Remove
                             @Override
                             public void process(Exchange exchange) throws Exception {
@@ -59,6 +46,7 @@ public class ResultSystem {
                             }
                         })
                         .log(body().toString())
+                        .process(new OrderMessageToNormedStringConverter())
                         .to("activemq:topic:resultOut");
 
 

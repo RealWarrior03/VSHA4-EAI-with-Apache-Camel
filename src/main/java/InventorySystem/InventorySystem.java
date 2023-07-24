@@ -11,23 +11,9 @@ import org.junit.jupiter.api.Order;
 
 import javax.jms.*;
 
-// TODO anstatt string mit Messages arbeiten
-// TODO nachricht richtig an Resultsystem weiterleiten
-// TODO CustomerCreditStanding logik implementieren
-// TODO Betrag abziehen wenn Rückmeldung von Resultsystem
-// TODO CustumerCredits Datenbank oder so in Billingsystempackage machen
-
 public class InventorySystem {
 
     public static void main(String[] args) throws Exception {
-        /*
-        DefaultCamelContext ctxt = new DefaultCamelContext();
-        ActiveMQComponent activeMQComponent = ActiveMQComponent.activeMQComponent();
-        activeMQComponent.setTrustAllPackages(true);
-        ctxt.addComponent("activemq", activeMQComponent);
-        */
-        //activemq stuff
-
         CustomerCreditStanding processIS = new CustomerCreditStanding();
         ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory("tcp://localhost:61616");
         connectionFactory.setTrustAllPackages(true);
@@ -79,6 +65,5 @@ public class InventorySystem {
             }
         });
         camelContext.start();
-        //camelContext.stop();
     }
 }

@@ -1,12 +1,12 @@
 package CallCenterOrderSystem;
 
 import ContentEnricher.*;
-import OrderMessage.OrderMessage;
 import WebOrderSystem.WOSInputTransformer;
 import org.apache.camel.CamelContext;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.activemq.ActiveMQConnectionFactory;
+import OrderMessage.*;
 
 import javax.jms.*;
 
@@ -55,18 +55,10 @@ public class CallCenterOrderSystem {
                             .split(body().tokenize("\n"))
                             .process(new CCOSInputTransformer()) //transformCCOS
                             .process(new ContentEnricher())//enrich Message
-                            //printing out MessageObjects
-                            .process(exchange -> {
-                                // Hole den Inhalt der Datei
-                                OrderMessage content = exchange.getIn().getBody(OrderMessage.class);
-
-                                // Gib den Inhalt in der Konsole aus
-                                System.out.println("Content of the OrderMessage Object");
-                                System.out.println(content.toString());
-                            })
-                            .to("activemq:queue:orderIDGenIn") //to queue channel TODO might be incorrectly implemented
-                            .transform(body().append("\n"))
-                            .to("file:" + DESTINATION_FOLDER + "?fileName=callcenterordersystemoutput.txt&noop=true&fileExist=Append"); //only for debugging
+                            .process(new OrderMessageToNormedStringConverter())
+                            .to("activemq:queue:orderIDGenIn"); //to queue channel TODO might be incorrectly implemented
+                            //.transform(body().append("\n"))
+                            //.to("file:" + DESTINATION_FOLDER + "?fileName=callcenterordersystemoutput.txt&noop=true&fileExist=Append"); //only for debugging
                 }
             });
             camelContext.start();

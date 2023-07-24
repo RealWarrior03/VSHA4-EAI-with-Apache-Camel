@@ -1,7 +1,7 @@
 package WebOrderSystem;
 
 import ContentEnricher.*;
-import OrderMessage.OrderMessage;
+import OrderMessage.*;
 import org.apache.camel.CamelContext;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.impl.DefaultCamelContext;
@@ -54,17 +54,7 @@ public class WebOrderSystem {
                     .split(body().tokenize(System.getProperty("line.separator")))
                     .process(new WOSInputTransformer()) //transformWOS
                     .process(new ContentEnricher())//enrich Message
-
-                    //printing out MessageObjects
-                    .process(exchange -> {
-                        // Hole den Inhalt der Datei
-                        OrderMessage content = exchange.getIn().getBody(OrderMessage.class);
-
-                        // Gib den Inhalt in der Konsole aus
-                        System.out.println("Content of the OrderMessage Object");
-                        System.out.println(content.toString());
-                    })
-
+                    .process(new OrderMessageToNormedStringConverter())
                     .to("activemq:queue:orderIDGenIn");  //to queue channel TODO might be incorrectly implemented
                      //.transform(body().append("\n"))
                     //.to("file:" + DESTINATION_FOLDER + "?fileName=webordersystemoutput.txt&noop=true&fileExist=Append"); //only for debugging
