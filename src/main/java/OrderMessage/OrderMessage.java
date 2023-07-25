@@ -193,8 +193,7 @@ public class OrderMessage implements Serializable {
             overallItemsPlaceholder = Integer.toString(overallItems);
         }
 
-        return (Integer.toString(customerID) + ", " + firstName + ", " + lastName + ", Overall: " + overallItemsPlaceholder
-                + ", DivingSuits: " + Integer.toString(numberOfDivingSuits) + ", Surfboards: " + Integer.toString(numberOfSurfboards) + ", Valid: "
-                + String.valueOf(valid) + ", validation Result: " + validationResultPlaceholder+ ", ResSysWasHere: "+String.valueOf(resSysWasHere) +", OrderID: " + Integer.toString(orderID));
+        return (Integer.toString(customerID) + ", " + firstName + ", " + lastName + ", DivingSuits: " + Integer.toString(numberOfDivingSuits) + ", Surfboards: " + Integer.toString(numberOfSurfboards) + ", Valid: "
+                + String.valueOf(valid) + ", validation Result: " + validationResultPlaceholder+ ", OrderID: " + Integer.toString(orderID));
     }
 }
