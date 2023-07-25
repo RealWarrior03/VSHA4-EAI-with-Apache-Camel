@@ -37,15 +37,6 @@ public class ResultSystem {
             public void configure() throws Exception {
                 from("activemq:queue:resultIn")
                         .process(new NormedStringToOrderMessageConverter())
-                        //.log("-------------INPUT------------")
-                        //.process(new PrintDebug())
-                        /*.process(new Processor() {
-                            @Override
-                            public void process(Exchange exchange) throws Exception {
-                                OrderMessage om = exchange.getIn().getBody(OrderMessage.class);
-                                exchange.getIn().setHeader("OrderID", om.getOrderID());
-                            }
-                        })*/
                         .aggregate(body().method("getOrderID"), new AggregationStrategy() {
                             @Override
                             public Exchange aggregate(Exchange exchange1, Exchange exchange2) {
@@ -66,8 +57,11 @@ public class ResultSystem {
                         .process(new PrintDebug())
                         .process(new OrderMessageToNormedStringConverter())
                         .to("activemq:topic:resultOut")
-                        .transform(body().append("\n"))
-                        .to("file:src/main/outputfiles?fileName=resultOutputFile.txt&noop=true&fileExist=Append");
+                        .process(new NormedStringToOrderMessageConverter())
+                        .choice()
+                            .when(body().method("isValid"))
+                                .transform(body().append("\n"))
+                                .to("file:src/main/outputfiles?fileName=resultOutputFile.txt&noop=true&fileExist=Append");
 
 
                 //.to("activemq:topic:new_order");  //pubsub channel TODO might be incorrectly implemented

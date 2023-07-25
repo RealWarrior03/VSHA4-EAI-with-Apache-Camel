@@ -16,19 +16,6 @@ public class WebOrderSystem {
     private static final String SOURCE_FOLDER = "src/main/inputfiles";
     private static final String DESTINATION_FOLDER = "src/main/outputfiles";
 
-    /*
-    PARAMS:
-    foldername filename
-    example: src/main/inputfiles webordersysteminput.txt
-
-    INPUT:
-    a file containing multiple orders seperated by \n
-    order format:
-    FirstName, LastName, Number of ordered surfboards, Number of ordered diving suits, Customer-ID
-
-     OUTPUT:
-     none
-     */
 
     public static void main(String[] args) throws Exception {
         String foldername = args[0];
@@ -52,10 +39,8 @@ public class WebOrderSystem {
                 @Override
                 public void configure() throws Exception {
                 from("direct:start")
-                        .split(body().tokenize(System.getProperty("line.separator")))
                         .process(new WOSInputTransformer()) //transformWOS
                         .process(new ContentEnricher())//enrich Message
-                        .process(new PrintDebug())
                         .process(new OrderMessageToNormedStringConverter())
                         .to("activemq:queue:orderIDGenIn");
                 //.transform(body().append("\n"))

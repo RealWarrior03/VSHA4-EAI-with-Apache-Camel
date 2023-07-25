@@ -56,7 +56,10 @@ public class CallCenterOrderSystem {
                             .process(new CCOSInputTransformer()) //transformCCOS
                             .process(new ContentEnricher())//enrich Message
                             .process(new OrderMessageToNormedStringConverter())
-                            .to("activemq:queue:orderIDGenIn"); //to queue channel
+                            .to("activemq:queue:orderIDGenIn") //to queue channel
+                            .process(new NormedStringToOrderMessageConverter())
+                            .transform(body().append("\n"))
+                            .to("file:" + DESTINATION_FOLDER + "?fileName=callcenterordersystemoutput.txt&noop=true&fileExist=Append"); //to log file
                 }
             });
             camelContext.start();

@@ -21,16 +21,16 @@ public class InventoryStanding implements Processor {
             availableDivingSuits -= nmbOrdDivingSuits;
             availableSurfBoards -= nmbOrdSurfBoards;
 
-            if(availableSurfBoards < 0){
-                message.setValid(false);
-                message.setValidationResult("not enough surfboard in the inventory");
-            }else if(availableDivingSuits < 0){
-                message.setValid(false);
-                message.setValidationResult("not enough divingsuits in the inventory");
-            }else if(availableDivingSuits < 0 && availableSurfBoards < 0){
+            if(availableDivingSuits < 0 && availableSurfBoards < 0) {
                 message.setValid(false);
                 message.setValidationResult("not enough divingsuits and surfboards in the inventory");
-            }else{
+            } else if(availableDivingSuits < 0) {
+                message.setValid(false);
+                message.setValidationResult("not enough divingsuits in the inventory");
+            } else if(availableSurfBoards < 0) {
+                message.setValid(false);
+                message.setValidationResult("not enough surfboard in the inventory");
+            } else {
                 message.setValid(true);
                 message.setValidationResult("products are in the inventory");
             }
