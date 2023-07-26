@@ -1,33 +1,11 @@
-# How to run our code
-- to be written
-
-# To-Do
-- debugging
-
-# Questions
-- CCOS
-  - Läuft auf einer while(true) loop, soll das so?
-    - open
-  - Liest mittels Thread.sleep(120000) für 2min, gibt es einen anderen Weg?
-    - open
-  - Ergebnis wird zusätzlich in Output.txt gepackt, scheint so gewünscht
-    - open
-
-# Systems
-- [x] WebOrderSystem
-  - [x] from
-  - [x] process
-  - [x] enrich
-  - [x] to
-- [x] CallCenterOrderSystem
-  - [x] from
-  - [x] process
-  - [x] enrich
-  - [x] to
-- [x] BillingSystem
-  - [x] CustomerCreditStanding
-- [x] InventorySystem
-- [x] ResultSystem
-
-# Bugs
-- nothing
+# How to run our code:
+- you have to have activemq running with tcp://localhost:61616 as a transport connector
+- mvn package
+- This creates the 7 components that can be run like this:
+  - java -jar target/weborder.jar
+  - java -jar target/orderidgenerator.jar
+  - java -jar target/callcenter.jar src/main/inputfiles callcenterordersysteminput.txt
+  - java -jar target/callcenterproducer.jar
+  - java -jar target/billing.jar
+  - java -jar target/inventory.jar
+  - java -jar target/resultsystem.jar
